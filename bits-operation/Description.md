@@ -45,11 +45,11 @@ Isso já resolve e na plataforma do leetcode teve o seguinte rendimento:
 
 Então eu pensei... podemos melhorar o tempo de execução senão precisar operar todas as divisões. Talvez analisando a sua representacão binária, podemos obter a quantidade de operações sem que seja necessário realizar todas as operações.
 
+Para transformar o número 1110 em 0, temos que deslocar para direita quando terminado em 0 e subtrair por 1 quando terminado em 1 que logo virará zero e será deslocado novamente. Então cada bit 1 vale duas operações e cada bit 0 vale apenas uma operação. O único ponto de atenção é o bit 1 mais a esquerda, pois quando o subtrairmos não será necessário deslocar o número à direita, pois já teremos zero.
+
 Ex:
 ```
 14 = 1110 na base 2
-
-# para transformar o número 1110 em 0, temos que deslocar para direita quando terminado em 0 e subtrair por 1 quando terminado em 1 que logo virará zero e será deslocado novamente. Então cada bit 1 vale duas operações e cada bit 0 vale apenas uma operação. O único ponto de atenção é o bit 1 mais a esquerda, pois quando o subtrairmos não será necessário deslocar o número à direita, pois já teremos zero.
 
 #ENTÃO...
 Resposta: 2 * (bits 1) + (bits 0) - 1
