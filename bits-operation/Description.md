@@ -79,3 +79,19 @@ var numberOfSteps  = function(num) {
 Confesso que fiquei muito incomodado com essa fórmula mágica, vale uma análise mais profunda sobre. Antes vale mostrar como esse código louco performou no leetcode.
 
 [![Image from Gyazo](https://i.gyazo.com/dc904eef0e2f1d596d6b324ba4d0e5ae.png)](https://gyazo.com/dc904eef0e2f1d596d6b324ba4d0e5ae)
+
+
+Para me aventurar, decidi testar em c++ que é uma linguagem em mais baixo nível o que nos possibilita perceber sutilezas que o javascript abstrai. No javascript, usar shift ou divisão não tem relevância no tempo de execução, visto que o gargalo está em outras questões como identificar tipagem e etc...
+
+```
+class Solution {
+public:
+    int numberOfSteps (int num) {
+        return log2(num) + __builtin_popcount(num);
+    }
+};
+```
+
+Nesta solução usei o log2 para saber a quantidade de bits - 1 e usei a função builtin do c++ que conta o número de bits 1. Essa solução bateu o record da plataforma ficando em primeiro lugar tanto em velocidade quanto em memória.
+
+[![Image from Gyazo](https://i.gyazo.com/e3e56337b8edd74293107b31ecb369aa.png)](https://gyazo.com/e3e56337b8edd74293107b31ecb369aa)
