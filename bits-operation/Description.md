@@ -76,6 +76,6 @@ var numberOfSteps  = function(num) {
 };
 ```
 
-Confesso que fiquei muito incomodado com essa fórmula mágica, vale uma análise mais profunda sobre, mas antes vamos mostrar como esse código louco performou no leetcode.
+Confesso que fiquei muito incomodado com essa fórmula mágica, vale uma análise mais profunda sobre. Antes vale mostrar como esse código louco performou no leetcode.
 
 [![Image from Gyazo](https://i.gyazo.com/dc904eef0e2f1d596d6b324ba4d0e5ae.png)](https://gyazo.com/dc904eef0e2f1d596d6b324ba4d0e5ae)
