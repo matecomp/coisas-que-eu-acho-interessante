@@ -55,4 +55,27 @@ Ex:
 Resposta: 2 * (bits 1) + (bits 0) - 1
 ```
 
-** Como contar a quantidade de bits 1 num número inteiro? **
+### Como contar a quantidade de bits 1 num número inteiro?
+
+Encontrei na internet uma fórmula mágica de contar quantos bits 1 tem um número. O log2 nos informa quantas vezes temos de dividir o número por 2 até chegar a 1 (inverso da exponenciação) e isso é equivalente ao número de bits que o número tem. Então podemos obter o número de operações da seguinte forma:
+
+total de bits + bits1 (bits que receberão a operação de decremento)
+
+```
+/**
+ * @param {number} num
+ * @return {number}
+ */
+var numberOfSteps  = function(num) {
+    let n = num;
+    n = n - ((n >> 1) & 0x55555555);                            #Magia negra
+    n = (n & 0x33333333) + ((n >> 2) & 0x33333333);             #Aconteceu
+    n = ((n + (n >> 4) & 0xF0F0F0F) * 0x1010101) >> 24;         #Aqui
+    
+    return Math.floor(Math.log2(num)) + n
+};
+```
+
+Confesso que fiquei muito incomodado com essa fórmula mágica, vale uma análise mais profunda sobre, mas antes vamos mostrar como esse código louco performou no leetcode.
+
+[![Image from Gyazo](https://i.gyazo.com/dc904eef0e2f1d596d6b324ba4d0e5ae.png)](https://gyazo.com/dc904eef0e2f1d596d6b324ba4d0e5ae)
