@@ -92,6 +92,6 @@ public:
 };
 ```
 
-Nesta solução usei o log2 para saber a quantidade de bits - 1 e usei a função builtin do c++ que conta o número de bits 1. Essa solução bateu o record da plataforma ficando em primeiro lugar tanto em velocidade quanto em memória.
+Nesta solução usei o log2 para saber a quantidade total de bits e usei a função builtin do c++ que conta o número de bits 1. Essa solução bateu o record da plataforma ficando em primeiro lugar tanto em velocidade quanto em memória.
 
 [![Image from Gyazo](https://i.gyazo.com/e3e56337b8edd74293107b31ecb369aa.png)](https://gyazo.com/e3e56337b8edd74293107b31ecb369aa)
