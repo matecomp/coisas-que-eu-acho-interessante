@@ -5,6 +5,9 @@ Este projeto consiste numa POC utilizando a API de Bot do Telegram para realizar
 CIDA - RITA
 
 ### Commands:
+
 /add <nome-do-remedio> - cadastra um novo remédio
+
 /notify <nome-do-remedio> <tempo-em-horas> - agenda uma notifição para tomar o remédio
+
 /drugs - lista todos os remédios cadastrados
