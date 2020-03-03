@@ -54,6 +54,24 @@ def add(update, context):
         update.message.reply_text("Voce precisa dizer o nome do remédio: /add <nome-do-remedio>")
 
 @telegramCommand
+def remove(update, context):
+    user_text = update.message.text
+    chat_id = update.message.chat_id
+
+    try:
+        drugs_name = context.args[0]
+
+        if drugs_name in context.chat_data:
+            context.chat_data.pop(drugs_name, None)
+            update.message.reply_text(f"""O remédio {drugs_name} foi removido.""")
+            return
+
+        update.message.reply_text(f"O remédio {drugs_name} não existe na sua lista de remédios.")
+
+    except (IndexError, ValueError):
+        update.message.reply_text("Voce precisa dizer o nome do remédio: /remove <nome-do-remedio>")
+
+@telegramCommand
 def notify(update, context):
     user_text = update.message.text
     chat_id = update.message.chat_id
@@ -93,6 +111,7 @@ def start(update, context):
         Vê se fica bom logo hein :)
     
     Digite: /add <nome-do-remedio> para adicionar um remédio
+    Digite: /remove <nome-do-remedio> para remover um remédio
     Digite: /notify <nome-do-remedio> <tempo-em-horas> para agendar uma notificação
     Digite: /drugs para saber sua lista de remédios e quanto tempo falta para a notificação
     """
@@ -103,6 +122,7 @@ def main():
     dispatcher = updater.dispatcher
     dispatcher.add_handler(start)
     dispatcher.add_handler(add)
+    dispatcher.add_handler(remove)
     dispatcher.add_handler(drugs)
     dispatcher.add_handler(notify)
     updater.start_polling()
