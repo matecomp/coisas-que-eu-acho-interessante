@@ -1,4 +1,4 @@
-from telegram.ext import Updater, InlineQueryHandler, CommandHandler
+from telegram.ext import Updater, InlineQueryHandler, CommandHandler, CallbackContext
 from datetime import timedelta
 import requests
 import re
@@ -6,14 +6,22 @@ import re
 TOKEN = '1114108713:AAHcjlsMo0wHUoUDCEPw5iuudrrSA2a0uUo'
 
 def telegramCommand(func):
-    name = name = func.__name__
+    name = func.__name__
     return CommandHandler(name, func)
 
-def notification(drugs_name, chat_data):
-    def message(context):
+
+def notification(drugs_name):
+    notification_message = f"Tá na hora de tomar o {drugs_name} meu filho!"
+
+    def increasing_message_callback(context: CallbackContext):
         job = context.job
-        context.bot.send_message(job.context, text=f"Tá na hora de tomar o {drugs_name} meu filho!\nJá tomou o remédio? /tomei")
-    return message
+        context.bot.send_message(job.context,
+                                    text=notification_message)
+        job.interval += 1.0
+        if job.interval > 10.0:
+            job.schedule_removal()
+
+    return increasing_message_callback
 
 @telegramCommand
 def drugs(update, context):
@@ -93,15 +101,10 @@ def notify(update, context):
         update.message.reply_text(response)
 
 
-        context.job_queue.run_repeating(notification(drugs_name, context.chat_data), interval=3, first=notification_delay, context=chat_id)
+        context.job_queue.run_repeating(notification(drugs_name), interval=3, first=notification_delay, context=chat_id)
     
     except (IndexError, ValueError):
         update.message.reply_text("Voce precisa dizer o nome do remédio e o intervalo de tempo em horas:\n /notify <nome-do-remedio> <intervalo-em-horas>")
-
-@telegramCommand
-def tomei(update, context):
-    context.job_queue.stop()
-    update.message.reply_text("Fique bom logo <3")
 
 @telegramCommand
 def start(update, context):
@@ -128,7 +131,6 @@ def main():
     dispatcher.add_handler(remove)
     dispatcher.add_handler(drugs)
     dispatcher.add_handler(notify)
-    dispatcher.add_handler(tomei)
     updater.start_polling()
     updater.idle()
 
