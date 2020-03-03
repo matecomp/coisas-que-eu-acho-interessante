@@ -20,7 +20,17 @@ def notification(drugs_name, chat_data):
 def drugs(update, context):
     user_text = update.message.text
     chat_id = update.message.chat_id
-    update.message.reply_text(context.chat_data)
+    drugs_list = context.chat_data
+
+    if len(drugs_list) == 0:
+        update.message.reply_text(f"Você não tem nenhum remédio adicionado.")
+        return
+
+    response = ""
+    for drugs_name in drugs_list:
+        response += f"{drugs_name} - {drugs_list[drugs_name]}h\n"
+
+    update.message.reply_text(response)
 
 @telegramCommand
 def add(update, context):
