@@ -1,5 +1,5 @@
 from telegram.ext import Updater, InlineQueryHandler, CommandHandler
-from datetime import time
+from datetime import time, timedelta
 import requests
 import re
 
@@ -12,9 +12,7 @@ def telegramCommand(func):
 def notification(drugs_name, chat_data):
     def message(context):
         job = context.job
-        print(chat_data)
-        chat_data[drugs_name] = 0
-        context.bot.send_message(job.context, text=f"""Tá na hora de tomar o {drugs_name} meu filho!""")
+        context.bot.send_message(job.context, text=f"Tá na hora de tomar o {drugs_name} meu filho!\nJá tomou o remédio? /tomei")
     return message
 
 @telegramCommand
@@ -29,7 +27,7 @@ def drugs(update, context):
 
     response = ""
     for drugs_name in drugs_list:
-        response += f"{drugs_name} - {drugs_list[drugs_name]}h\n"
+        response += f"{drugs_name}: start - {drugs_list[drugs_name]['start']}, interval - {drugs_list[drugs_name]['interval']}\n"
 
     update.message.reply_text(response)
 
@@ -80,17 +78,18 @@ def notify(update, context):
     try:
         drugs_name = context.args[0]
         notification_start = time(hour=int(context.args[1]))
-        notification_interval = int(context.args[2])
-        print(notification_start, notification_interval)
+        notification_interval = timedelta(hours=int(context.args[2]))
 
         if drugs_name not in context.chat_data:
             update.message.reply_text(f"""O remédio {drugs_name} ainda não foi adicionado a sua lista, para adicionar digite: /add {drugs_name}""")
             return
         
-        context.chat_data[drugs_name] = (notification_start, notification_interval)
+        context.chat_data[drugs_name] = {
+            'start': notification_start,
+            'interval': notification_interval
+        }
 
-        context.job_queue.run_repeating(notification(drugs_name, context.chat_data), interval=notification_interval, first=notification_start, context=chat_id)
-        print(notification_start, notification_interval)
+        context.job_queue.run_repeating(notification(drugs_name, context.chat_data), interval=1, first=0, context=chat_id)
 
         response = f"""
         A partir das {notification_start} você tem que tomar o {drugs_name} a cada {notification_interval} horas
@@ -99,6 +98,11 @@ def notify(update, context):
     
     except (IndexError, ValueError):
         update.message.reply_text("Voce precisa dizer o nome do remédio, horário de início e intervalo:\n /notify <nome-do-remedio> <horário-de-início> <intervalo-em-horas>")
+
+@telegramCommand
+def tomei(update, context):
+    context.job_queue.stop()
+    update.message.reply_text("Fique bom logo <3")
 
 @telegramCommand
 def start(update, context):
@@ -125,6 +129,7 @@ def main():
     dispatcher.add_handler(remove)
     dispatcher.add_handler(drugs)
     dispatcher.add_handler(notify)
+    dispatcher.add_handler(tomei)
     updater.start_polling()
     updater.idle()
 
