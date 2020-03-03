@@ -89,7 +89,7 @@ def notify(update, context):
             'interval': notification_delay
         }
 
-        response = f"Irei te lembrar de tomar o {drugs_name} daqui há {notification_delay} {"hora" if notification_delay < 2 else "horas"}"
+        response = f"Irei te lembrar de tomar o {drugs_name} daqui há {notification_delay} {'hora' if notification_delay < 2 else 'horas'}"
         update.message.reply_text(response)
 
 
