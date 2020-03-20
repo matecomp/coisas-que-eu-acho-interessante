@@ -124,6 +124,7 @@ def start(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text=init_message)
 
 def main():
+    print("Inicializando setup do bot.")
     updater = Updater(token=TOKEN, use_context=True)
     dispatcher = updater.dispatcher
     dispatcher.add_handler(start)
@@ -131,7 +132,11 @@ def main():
     dispatcher.add_handler(remove)
     dispatcher.add_handler(drugs)
     dispatcher.add_handler(notify)
+    
+    print("Subindo o bot para o telegram")
     updater.start_polling()
+
+    print("Bot instalado no telegram, para acessá-lo acesse: https://web.telegram.org/#/im?p=@CidaRitaBot")
     updater.idle()
 
 if __name__ == '__main__':
