@@ -10,7 +10,7 @@ mnist = tf.keras.datasets.mnist
 # Normalize image input
 x_train, x_test = x_train / 255.0, x_test / 255.0
 
-# Add a channels dimension [..., None] => (..., 1)
+# Add a channel dimension [..., None] => (..., 1)
 x_train = x_train[..., tf.newaxis]
 x_test = x_test[..., tf.newaxis]
 
