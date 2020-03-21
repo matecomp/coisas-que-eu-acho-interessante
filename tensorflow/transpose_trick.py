@@ -2,7 +2,7 @@ import numpy as np
 from time import time
 
 x = np.random.rand(100)
-W = np.random.rand(100,500)
+W = np.random.rand(100,500) # 500 neurons
 # print(x)
 
 x_trick = x[..., np.newaxis]
