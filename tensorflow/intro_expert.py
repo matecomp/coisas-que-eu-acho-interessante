@@ -16,10 +16,11 @@ x_test = x_test[..., tf.newaxis]
 
 # Slice in batch and shuffle train data
 train_ds = tf.data.Dataset.from_tensor_slices(
-    (x_train, y_train)).shuffle(10000).batch(32)
+    (tf.cast(x_train, tf.float32), tf.cast(y_train, tf.int64))).shuffle(10000).batch(32)
 
 # Slice in batch and don't shuffle test data
-test_ds = tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(32)
+test_ds = tf.data.Dataset.from_tensor_slices(
+    (tf.cast(x_test, tf.float32), tf.cast(y_test, tf.int64))).batch(32)
 
 # Build model class extending tf.keras.Model
 class MyModel(Model):
