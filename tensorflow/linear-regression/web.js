@@ -5,16 +5,16 @@ const RADIUS = 10
 const points = []
 const params = [1, 0]
 
-function setParams() {
+function setParams () {
   for (let i = 0; i < model.getWeights().length; i++) {
     params[i] = model.getWeights()[i].dataSync()[0]
   }
 }
 
-let training = false;
-function trainModel() {
+let training = false
+function trainModel () {
   if (points.length === 0 || training) {
-    return;
+    return
   }
 
   training = true
@@ -38,7 +38,7 @@ function predict (x) {
 
 const model = tf.sequential({
   layers: [
-    tf.layers.dense({ 
+    tf.layers.dense({
       inputShape: [1],
       units: 1,
       kernelInitializer: 'ones'
@@ -48,9 +48,9 @@ const model = tf.sequential({
 
 model.compile({
   optimizer: tf.train.sgd(
-    learningRate=0.01,
-    momentum=3,
-    nesterov=true
+    (learningRate = 0.01),
+    (momentum = 3),
+    (nesterov = true)
   ),
   loss: 'meanSquaredError'
 })
@@ -63,11 +63,13 @@ function setup () {
   frameRate(60)
 }
 
+let borderLen = 0
 function mouseClicked () {
   points.push({
     x: mouseX,
     y: mouseY
   })
+  borderLen = RADIUS * 2
 }
 
 function draw () {
@@ -76,6 +78,13 @@ function draw () {
   fill(150)
   for (let idx in points) {
     circle(points[idx].x, points[idx].y, RADIUS)
+  }
+
+  if (points.length > 0 && borderLen > 0) {
+    fill(255)
+    let idx = points.length - 1
+    circle(points[idx].x, points[idx].y, RADIUS + borderLen)
+    borderLen -= 1
   }
 
   stroke(255)
