@@ -11,6 +11,26 @@ function setParams() {
   }
 }
 
+let training = false;
+function trainModel() {
+  if (points.length === 0 || training) {
+    return;
+  }
+
+  training = true
+  const data = tf.tensor1d(points.map(point => point.x / WIDTH))
+  const output = tf.tensor1d(points.map(point => (HEIGHT - point.y) / HEIGHT))
+  model
+    .fit(data, output, {
+      epochs: 1,
+      batchSize: 1
+    })
+    .then(info => {
+      setParams()
+      training = false
+    })
+}
+
 function predict (x) {
   y = x * params[0] + params[1] * HEIGHT
   return HEIGHT - y
@@ -27,15 +47,20 @@ const model = tf.sequential({
 })
 
 model.compile({
-  optimizer: tf.train.sgd(.1),
+  optimizer: tf.train.sgd(
+    learningRate=0.01,
+    momentum=3,
+    nesterov=true
+  ),
   loss: 'meanSquaredError'
 })
 
 setParams()
+setInterval(trainModel, 10)
 
 function setup () {
   createCanvas(WIDTH, HEIGHT)
-  frameRate(30)
+  frameRate(60)
 }
 
 function mouseClicked () {
@@ -43,18 +68,6 @@ function mouseClicked () {
     x: mouseX,
     y: mouseY
   })
-
-  const data = tf.tensor1d(points.map(point => point.x / WIDTH))
-  const output = tf.tensor1d(points.map(point => (HEIGHT - point.y) / HEIGHT))
-
-  model
-    .fit(data, output, {
-      epochs: 20,
-      batchSize: 1
-    })
-    .then(info => {
-      setParams()
-    })
 }
 
 function draw () {
