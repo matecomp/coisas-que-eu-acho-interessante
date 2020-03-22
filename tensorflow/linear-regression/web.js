@@ -27,7 +27,7 @@ const model = tf.sequential({
 })
 
 model.compile({
-  optimizer: 'sgd',
+  optimizer: tf.train.sgd(.1),
   loss: 'meanSquaredError'
 })
 
