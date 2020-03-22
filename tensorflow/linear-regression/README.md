@@ -2,7 +2,7 @@
 
 Para inicializar meus estudos com tensorflow para javascript, fiz uma página com um canvas para desenhar pontos e depois aplicar a regressão linear nesses pontos.
 
-[![Image from Gyazo](https://i.gyazo.com/74f62522b2e1d976b7f5f6fc7f6671b7.gif)](https://gyazo.com/74f62522b2e1d976b7f5f6fc7f6671b7)
+[![Image from Gyazo](https://i.gyazo.com/f30c33f4ce96d6d1a79ae19d89c09ebd.gif)](https://gyazo.com/f30c33f4ce96d6d1a79ae19d89c09ebd)
 
 ## Ferramentas:
 
