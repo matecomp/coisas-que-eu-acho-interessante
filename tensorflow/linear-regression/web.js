@@ -18,17 +18,19 @@ function trainModel () {
   }
 
   training = true
-  const data = tf.tensor1d(points.map(point => point.x / WIDTH))
-  const output = tf.tensor1d(points.map(point => (HEIGHT - point.y) / HEIGHT))
-  model
-    .fit(data, output, {
-      epochs: 1,
-      batchSize: 1
-    })
-    .then(info => {
-      setParams()
-      training = false
-    })
+  tf.tidy(() => {
+    const data = tf.tensor1d(points.map(point => point.x / WIDTH))
+    const output = tf.tensor1d(points.map(point => (HEIGHT - point.y) / HEIGHT))
+    model
+      .fit(data, output, {
+        epochs: 1,
+        batchSize: 1
+      })
+      .then(info => {
+        setParams()
+        training = false
+      })
+  })
 }
 
 function predict (x) {
