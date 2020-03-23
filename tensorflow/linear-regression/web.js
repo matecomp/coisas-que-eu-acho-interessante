@@ -2,47 +2,13 @@ const WIDTH = 650
 const HEIGHT = 650
 const RADIUS = 10
 
-const points = []
+const xs = []
+const ys = []
 
 // y = mx + b
 let m, b
 
-// const model = tf.sequential({
-//   layers: [
-//     tf.layers.dense({
-//       inputShape: [1],
-//       units: 1,
-//       kernelInitializer: 'ones'
-//     })
-//   ]
-// })
-
-// model.compile({
-//   optimizer: tf.train.sgd(0.01),
-//   loss: 'meanSquaredError'
-// })
-
-// let training = false
-// function trainModel () {
-//   if (points.length === 0 || training) {
-//     return
-//   }
-
-//   training = true
-//   const data = tf.tensor1d(points.map(point => point.x))
-//   const output = tf.tensor1d(points.map(point => point.y))
-
-//   return model
-//     .fit(data, output, {
-//       epochs: 1,
-//       batchSize: 1
-//     })
-//     .then(() => {
-//       training = false
-//     })
-// }
-
-const learningRate = 0.01
+const learningRate = 0.1
 const optimizer = tf.train.sgd(learningRate)
 
 const loss = (pred, ys) =>
@@ -73,20 +39,16 @@ function setup () {
 
 let borderLen = 0
 function mouseClicked () {
-  points.push({
-    x: map(mouseX, 0, WIDTH, 0, 1),
-    y: map(mouseY, 0, HEIGHT, 1, 0)
-  })
+  xs.push(map(mouseX, 0, WIDTH, 0, 1))
+  ys.push(map(mouseY, 0, HEIGHT, 1, 0))
   borderLen = RADIUS * 2
 }
 
 function draw () {
   background(0, 50, 0)
+  const numPoints = xs.length
 
-  const xs = points.map(point => point.x)
-  const ys = points.map(point => point.y)
-
-  if (points.length > 0) {
+  if (numPoints > 0) {
     tf.tidy(() => {
       train(xs, ys)
     })
@@ -96,10 +58,10 @@ function draw () {
   const ys_scaled = ys.map(y => map(y, 0, 1, HEIGHT, 0))
 
   fill(150)
-  for (let idx = 0; idx < points.length; idx++) {
+  for (let idx = 0; idx < numPoints; idx++) {
     circle(xs_scaled[idx], ys_scaled[idx], RADIUS)
 
-    if (idx === points.length - 1 && borderLen > 0) {
+    if (idx === numPoints - 1 && borderLen > 0) {
       fill(255)
       circle(xs_scaled[idx], ys_scaled[idx], RADIUS + borderLen)
       borderLen -= 1
@@ -113,7 +75,7 @@ function draw () {
     let x2 = map(xLine[1], 0, 1, 0, WIDTH)
 
     let tfxs = tf.tensor1d(xLine)
-    
+
     const yLine = predict(tfxs).dataSync()
     let y1 = map(yLine[0], 0, 1, HEIGHT, 0)
     let y2 = map(yLine[1], 0, 1, HEIGHT, 0)
