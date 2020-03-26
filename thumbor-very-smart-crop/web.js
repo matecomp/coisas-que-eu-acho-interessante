@@ -35,13 +35,14 @@ function setup () {
   background(230, 255, 230)
 }
 
-function insideOut(x, y, radius) {
-  if (crop.left <= x && x <= crop.right) {
-    if (crop.top <= y && y <= crop.bottom) {
-      return true;
-    }
-  }
-  return false;
+function insideOut(x, y, width, height) {
+  const halfWidth = width / 2;
+  const halfHeight = height / 2;
+
+  const horizontalFit = crop.left <= x - halfWidth && x + halfWidth <= crop.right;
+  const verticalFit = crop.top <= y  - halfHeight && y + halfHeight <= crop.bottom;
+  
+  return horizontalFit && verticalFit;
 }
 
 function draw () {
@@ -51,8 +52,8 @@ function draw () {
   renderPreviewCrop()
 
   for (idx in focal_points) {
-    const { x, y, width, height } = focal_points[idx]
-    if (insideOut(x-width, y) && insideOut(x+width, y) && insideOut(x, y-height) && insideOut(x, y+height)) {
+    let { x, y, width, height } = focal_points[idx]
+    if (insideOut(x, y, width, height)) {
       fill(0, 120, 0, 130)
     } else {
       fill(120, 0, 0, 130)
