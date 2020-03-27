@@ -6,10 +6,10 @@ const thumborFinalUrl =
 const operations = [
   {
     top: 0,
-    right: 797,
+    right: 657,
     type: 'crop',
     bottom: 768,
-    left: 309
+    left: 409
   },
   {
     width: 200,
