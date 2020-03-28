@@ -1,12 +1,12 @@
-const WIDTH = 650
+const WIDTH = 1050
 const HEIGHT = 650
 const RADIUS = 10
 
 const xs = []
 const ys = []
 
-// y = mx + b
-let m, b
+// y = nx^2 + mx + b
+let n, m, b
 
 const learningRate = 0.1
 const optimizer = tf.train.sgd(learningRate)
@@ -18,7 +18,9 @@ const loss = (pred, ys) =>
     .mean()
 
 const predict = tfxs => {
-  return tfxs.mul(m).add(b)
+  const x2 = tfxs.square().mul(n)
+  const x1 = tfxs.mul(m)
+  return x2.add(x1).add(b)
 }
 
 const train = (xs, ys) => {
@@ -33,6 +35,7 @@ const train = (xs, ys) => {
 
 function setup () {
   createCanvas(WIDTH, HEIGHT)
+  n = tf.scalar(-0.5).variable()
   m = tf.scalar(1).variable()
   b = tf.scalar(0).variable()
 }
@@ -70,17 +73,24 @@ function draw () {
 
   stroke(255)
   tf.tidy(() => {
-    let xLine = [0, 1]
-    let x1 = map(xLine[0], 0, 1, 0, WIDTH)
-    let x2 = map(xLine[1], 0, 1, 0, WIDTH)
+    const xLine = [0, ,0.25, 0.5, 0.75, 1]
+    let xns = xLine.map(x => map(x, 0, 1, 0, WIDTH));
 
     let tfxs = tf.tensor1d(xLine)
 
     const yLine = predict(tfxs).dataSync()
-    let y1 = map(yLine[0], 0, 1, HEIGHT, 0)
-    let y2 = map(yLine[1], 0, 1, HEIGHT, 0)
+    let yns = yLine.map(y => map(y, 0, 1, HEIGHT, 0))
 
-    line(x1, y1, x2, y2)
+    noFill();
+    beginShape();
+    curveVertex(xns[0], yns[0])
+    for (idx in xLine) {
+      curveVertex(xns[idx], yns[idx])
+    }
+    curveVertex(xns[xLine.length-1], yns[yLine.length-1])
+    endShape();
+
+    // line(x1, y1, x2, y2)
   })
   stroke(0)
 }
